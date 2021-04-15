@@ -1,5 +1,6 @@
 package it.sogei.svildep.indirizziservice.controller;
 
+import it.sogei.svildep.indirizziservice.dto.AssociaIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.IndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.InsertIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.MessageDto;
@@ -21,9 +22,10 @@ public class IndirizzoController {
 
     private final IndirizzoService indirizzoService;
 
-    @GetMapping
-    public ResponseEntity<List<IndirizzoDto>> lista() throws SvildepException {
-        return ResponseEntity.ok().body(indirizzoService.getAll());
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<IndirizzoDto>> lista(@PathVariable("id") String id) throws SvildepException {
+        return ResponseEntity.ok().body(indirizzoService.findAllBySoggetto(Long.parseLong(id)));
     }
 
     @PostMapping("nuovoIndirizzo")
@@ -33,13 +35,15 @@ public class IndirizzoController {
         return ResponseEntity.ok().body(indirizzoService.insertIndirizzo(insertIndirizzoDto));
     }
 
- //   @PutMapping
- //   public ResponseEntity<MessageDto>associaASoggetto(@Valid @RequestBody AssociaIndirizzoDto associaIndirizzoDto,
- //                                                     BindingResult bindingResult) throws Exception{
- //       if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
- //       return ResponseEntity.ok().body(indirizzoService.associaASoggetto(associaIndirizzoDto));
+    @PutMapping("associa")
+    public ResponseEntity<MessageDto>associaASoggetto(@Valid @RequestBody AssociaIndirizzoDto associaIndirizzoDto,
+                                                      BindingResult bindingResult) throws Exception{
+        if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
+        return ResponseEntity.ok().body(indirizzoService.associaASoggetto(associaIndirizzoDto));
 
- //   }
+    }
+
+
 
 
 

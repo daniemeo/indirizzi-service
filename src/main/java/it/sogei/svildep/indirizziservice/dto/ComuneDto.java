@@ -4,15 +4,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ComuneDto extends SvildepDto{
+
+    @NotNull
     private String id;
+    @NotBlank
     private String sigla;
+    @NotBlank
     private String denominazioneComune;
     private String dataInizioValidita;
     private String dataFineValidita;
+
     private String comune;
     private String provinciaId;
 }

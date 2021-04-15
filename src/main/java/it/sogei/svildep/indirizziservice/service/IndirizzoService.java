@@ -1,5 +1,6 @@
 package it.sogei.svildep.indirizziservice.service;
 
+import it.sogei.svildep.indirizziservice.dto.AssociaIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.IndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.InsertIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.MessageDto;
@@ -8,7 +9,9 @@ import it.sogei.svildep.indirizziservice.exception.SvildepException;
 import it.sogei.svildep.indirizziservice.mapper.IndirizzoMapper;
 import it.sogei.svildep.indirizziservice.mapper.InsertIndirizzoMapper;
 import it.sogei.svildep.indirizziservice.model.Indirizzo;
+import it.sogei.svildep.indirizziservice.model.SoggettoFisico;
 import it.sogei.svildep.indirizziservice.repository.IndirizzoRepository;
+import it.sogei.svildep.indirizziservice.repository.SoggettoFisicoRepository;
 import it.sogei.svildep.indirizziservice.service.external.AnagrafeUnica;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,24 +26,50 @@ import java.util.List;
 public class IndirizzoService {
 
     private final IndirizzoRepository indirizzoRepository;
+    private final SoggettoFisicoRepository soggettoFisicoRepository;
     private final IndirizzoMapper indirizzoMapper;
     private final AnagrafeUnica anagrafeUnica;
     private final InsertIndirizzoMapper insertIndirizzoMapper;
 
-    public List<IndirizzoDto> getAll() {
-        List<Indirizzo> listaIndirizzi = indirizzoRepository.findAllEager();
+
+    public List<IndirizzoDto> findAllBySoggetto(Long id) {
+        SoggettoFisico soggettoFisico = soggettoFisicoRepository.findById(id).orElse(null);
+        if(soggettoFisico == null ){
+            throw new SvildepException(Messages.soggettoInesistente, HttpStatus.BAD_REQUEST);
+        }
+        List<Indirizzo> listaIndirizzi = indirizzoRepository.findAllIndirizziBySoggettoFisico_id(id);
         return indirizzoMapper.mapEntityToDto(listaIndirizzi);
+    }
+
+
+    public MessageDto insertIndirizzo(InsertIndirizzoDto insertIndirizzoDto) throws SvildepException {
+        if(insertIndirizzoDto.getComuneDto() ==  null && insertIndirizzoDto.getStatoEsteroId() == null){
+             return new MessageDto(Messages.erroreInserimento, HttpStatus.BAD_REQUEST);
+        }
+        Indirizzo indirizzo =  insertIndirizzoMapper.mapDtoToEntity(insertIndirizzoDto);
+        indirizzoRepository.save(indirizzo);
+        return new MessageDto(Messages.nuovoIndirizzo, HttpStatus.OK);
+
+    }
+
+    public MessageDto associaASoggetto(AssociaIndirizzoDto associaIndirizzoDto) throws SvildepException{
+        Indirizzo indirizzo = indirizzoRepository.findById(Long.parseLong(associaIndirizzoDto.getIndirizzoId())).orElse(null);
+        if(indirizzo == null ){
+            throw new SvildepException(Messages.indirizzoInesistente, HttpStatus.BAD_REQUEST);
+        }
+
+        SoggettoFisico soggettoFisico = soggettoFisicoRepository.findById(Long.parseLong(associaIndirizzoDto.getSoggettoFisicoId())).orElse(null);
+        if(soggettoFisico == null ){
+            throw new SvildepException(Messages.soggettoInesistente, HttpStatus.BAD_REQUEST);
+        }
+        indirizzo.setSoggettoFisico(soggettoFisico);
+        indirizzoRepository.save(indirizzo);
+
+        return new MessageDto(Messages.operazioneEffettuata, HttpStatus.OK);
     }
 
     public List<IndirizzoDto> listaDaAnagrafe(){
         List<IndirizzoDto> listaIndirizzi = anagrafeUnica.listAllIndirizzi();
         return listaIndirizzi;
     }
-
-    public MessageDto insertIndirizzo(InsertIndirizzoDto insertIndirizzoDto) throws SvildepException {
-        Indirizzo indirizzo =  insertIndirizzoMapper.mapDtoToEntity(insertIndirizzoDto);
-        indirizzoRepository.save(indirizzo);
-        return new MessageDto(Messages.nuovoIndirizzo, HttpStatus.OK);
-    }
-
 }
