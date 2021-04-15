@@ -28,6 +28,12 @@ public class IndirizzoController {
         return ResponseEntity.ok().body(indirizzoService.findAllBySoggetto(Long.parseLong(id)));
     }
 
+    @GetMapping("")
+    public ResponseEntity<List<IndirizzoDto>> listaDaAnagrafe() throws SvildepException {
+        return ResponseEntity.ok().body(indirizzoService.listaDaAnagrafe());
+    }
+
+
     @PostMapping("nuovoIndirizzo")
     public ResponseEntity<MessageDto>nuovoIndirizzo(@Valid @RequestBody InsertIndirizzoDto insertIndirizzoDto,
                                             BindingResult bindingResult) throws Exception {

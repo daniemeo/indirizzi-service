@@ -13,6 +13,7 @@ import it.sogei.svildep.indirizziservice.model.SoggettoFisico;
 import it.sogei.svildep.indirizziservice.repository.IndirizzoRepository;
 import it.sogei.svildep.indirizziservice.repository.SoggettoFisicoRepository;
 import it.sogei.svildep.indirizziservice.service.external.AnagrafeUnica;
+import it.sogei.svildep.indirizziservice.service.external.PortaleServiziDag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ public class IndirizzoService {
     private final SoggettoFisicoRepository soggettoFisicoRepository;
     private final IndirizzoMapper indirizzoMapper;
     private final AnagrafeUnica anagrafeUnica;
+    private final PortaleServiziDag portaleServiziDag;
     private final InsertIndirizzoMapper insertIndirizzoMapper;
 
 
@@ -48,6 +50,8 @@ public class IndirizzoService {
         }
         Indirizzo indirizzo =  insertIndirizzoMapper.mapDtoToEntity(insertIndirizzoDto);
         indirizzoRepository.save(indirizzo);
+        anagrafeUnica.insertIndirizzo(insertIndirizzoDto);
+        portaleServiziDag.comunicaCreazioneIndirizzo(insertIndirizzoDto);
         return new MessageDto(Messages.nuovoIndirizzo, HttpStatus.OK);
 
     }
@@ -72,4 +76,6 @@ public class IndirizzoService {
         List<IndirizzoDto> listaIndirizzi = anagrafeUnica.listAllIndirizzi();
         return listaIndirizzi;
     }
+
+
 }
