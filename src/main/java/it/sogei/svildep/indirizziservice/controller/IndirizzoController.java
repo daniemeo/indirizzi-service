@@ -1,6 +1,6 @@
 package it.sogei.svildep.indirizziservice.controller;
 
-import it.sogei.svildep.indirizziservice.dto.AssociaIndirizzoDto;
+import it.sogei.svildep.indirizziservice.dto.AssociaDissociaIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.IndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.InsertIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.MessageDto;
@@ -42,13 +42,19 @@ public class IndirizzoController {
     }
 
     @PutMapping("associa")
-    public ResponseEntity<MessageDto>associaASoggetto(@Valid @RequestBody AssociaIndirizzoDto associaIndirizzoDto,
+    public ResponseEntity<MessageDto>associaASoggetto(@Valid @RequestBody AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto,
                                                       BindingResult bindingResult) throws Exception{
         if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
-        return ResponseEntity.ok().body(indirizzoService.associaASoggetto(associaIndirizzoDto));
+        return ResponseEntity.ok().body(indirizzoService.associaASoggetto(associaDissociaIndirizzoDto));
 
     }
+    @PutMapping("chiusura")
+    public ResponseEntity<MessageDto>chiusura(@Valid @RequestBody AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto,
+                                                      BindingResult bindingResult) throws Exception{
+        if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
+        return ResponseEntity.ok().body(indirizzoService.chiusura(associaDissociaIndirizzoDto));
 
+    }
 
 
 

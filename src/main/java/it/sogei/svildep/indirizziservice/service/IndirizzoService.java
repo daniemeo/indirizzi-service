@@ -1,6 +1,6 @@
 package it.sogei.svildep.indirizziservice.service;
 
-import it.sogei.svildep.indirizziservice.dto.AssociaIndirizzoDto;
+import it.sogei.svildep.indirizziservice.dto.AssociaDissociaIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.IndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.InsertIndirizzoDto;
 import it.sogei.svildep.indirizziservice.dto.MessageDto;
@@ -56,13 +56,13 @@ public class IndirizzoService {
 
     }
 
-    public MessageDto associaASoggetto(AssociaIndirizzoDto associaIndirizzoDto) throws SvildepException{
-        Indirizzo indirizzo = indirizzoRepository.findById(Long.parseLong(associaIndirizzoDto.getIndirizzoId())).orElse(null);
+    public MessageDto associaASoggetto(AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto) throws SvildepException{
+        Indirizzo indirizzo = indirizzoRepository.findById(Long.parseLong(associaDissociaIndirizzoDto.getIndirizzoId())).orElse(null);
         if(indirizzo == null ){
             throw new SvildepException(Messages.indirizzoInesistente, HttpStatus.BAD_REQUEST);
         }
 
-        SoggettoFisico soggettoFisico = soggettoFisicoRepository.findById(Long.parseLong(associaIndirizzoDto.getSoggettoFisicoId())).orElse(null);
+        SoggettoFisico soggettoFisico = soggettoFisicoRepository.findById(Long.parseLong(associaDissociaIndirizzoDto.getSoggettoFisicoId())).orElse(null);
         if(soggettoFisico == null ){
             throw new SvildepException(Messages.soggettoInesistente, HttpStatus.BAD_REQUEST);
         }
@@ -76,6 +76,20 @@ public class IndirizzoService {
         List<IndirizzoDto> listaIndirizzi = anagrafeUnica.listAllIndirizzi();
         return listaIndirizzi;
     }
+
+
+    public MessageDto chiusura(AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto) throws SvildepException{
+        Indirizzo indirizzo = indirizzoRepository.findById(Long.parseLong(associaDissociaIndirizzoDto.getIndirizzoId())).orElse(null);
+        if(indirizzo == null ){
+            throw new SvildepException(Messages.indirizzoInesistente, HttpStatus.BAD_REQUEST);
+        }
+
+        indirizzo.setSoggettoFisico(null);
+        indirizzoRepository.save(indirizzo);
+
+        return new MessageDto(Messages.operazioneEffettuata, HttpStatus.OK);
+    }
+
 
 
 }

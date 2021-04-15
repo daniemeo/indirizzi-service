@@ -9,10 +9,10 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AssociaIndirizzoDto extends SvildepDto{
+public class AssociaDissociaIndirizzoDto extends SvildepDto{
 
     @NotBlank
     private String indirizzoId;
-    @NotBlank
+
     private String soggettoFisicoId;
 }
