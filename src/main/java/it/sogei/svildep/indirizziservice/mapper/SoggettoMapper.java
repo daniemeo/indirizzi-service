@@ -15,21 +15,18 @@ import org.springframework.stereotype.Component;
 public class SoggettoMapper implements Mapper<Soggetto, SoggettoDto> {
     @Override
     public Soggetto mapDtoToEntityImpl(SoggettoDto dto) throws RuntimeException {
-        Soggetto soggetto = new Soggetto();
+        return Soggetto.builder()
+                .id(Long.parseLong(dto.getId()))
+                .codiceFiscale(dto.getCodiceFiscale())
+                .build();
 
-        soggetto.setId(Long.parseLong(dto.getId()));
-        soggetto.setCodiceFiscale(dto.getCodiceFiscale());
-
-        return soggetto;
     }
 
     @Override
     public SoggettoDto mapEntityToDtoImpl(Soggetto entity) {
-        SoggettoDto soggettoDto = new SoggettoDto();
-
-        soggettoDto.setId(String.valueOf(entity.getId()));
-        soggettoDto.setCodiceFiscale(entity.getCodiceFiscale());
-
-        return soggettoDto;
+        return SoggettoDto.builder()
+                .id(String.valueOf(entity.getId()))
+                .codiceFiscale(entity.getCodiceFiscale())
+                .build();
     }
 }

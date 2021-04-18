@@ -15,38 +15,31 @@ import java.time.LocalDate;
 @Primary
 @NoArgsConstructor
 
-public class ComuneMapper implements Mapper<Comune, ComuneDto>{
+public class ComuneMapper implements Mapper<Comune, ComuneDto> {
 
     @Override
     public Comune mapDtoToEntityImpl(ComuneDto dto) throws RuntimeException {
-        Comune comune = new Comune();
-        comune.setId(Long.parseLong(dto.getId()));
-        comune.setSigla(dto.getSigla());
-        comune.setDenominazioneComune(dto.getDenominazioneComune());
-        comune.setDataInizioValidita(LocalDate.parse(dto.getDataInizioValidita()));
-        comune.setDataFineValidita(LocalDate.parse(dto.getDataFineValidita()));
-        comune.setComune(dto.getComune());
-
-        Provincia provincia = new Provincia();
-        provincia.setId(Long.parseLong(dto.getProvinciaId()));
-        comune.setProvincia(provincia);
-
-        return comune;
+        return Comune.builder().id(Long.parseLong(dto.getId())).sigla(dto.getSigla()).
+                denominazioneComune(dto.getDenominazioneComune()).
+                dataInizioValidita(LocalDate.parse(dto.getDataInizioValidita())).
+                dataFineValidita(LocalDate.parse(dto.getDataFineValidita())).comune(dto.getComune()).
+                provincia(Provincia.builder().id(Long.parseLong(dto.getProvinciaId())).build()).build();
     }
 
     @Override
     public ComuneDto mapEntityToDtoImpl(Comune entity) {
-        ComuneDto comuneDto = new ComuneDto();
-        if(entity != null) {
 
-            comuneDto.setId(String.valueOf(entity.getId()));
-            comuneDto.setSigla(entity.getSigla());
-            comuneDto.setDenominazioneComune(entity.getDenominazioneComune());
-            comuneDto.setDataInizioValidita(String.valueOf(entity.getDataInizioValidita()));
-            comuneDto.setDataFineValidita(String.valueOf(entity.getDataFineValidita()));
-            comuneDto.setComune(comuneDto.getComune());
-            comuneDto.setProvinciaId(String.valueOf(entity.getProvincia().getId()));
+        if (entity != null) {
+            return ComuneDto.builder()
+                    .id(String.valueOf(entity.getId()))
+                    .sigla(entity.getSigla())
+                    .denominazioneComune(entity.getDenominazioneComune())
+                    .dataInizioValidita(String.valueOf(entity.getDataInizioValidita()))
+                    .dataFineValidita(String.valueOf(entity.getDataFineValidita()))
+                    .comune(entity.getComune())
+                    .provinciaId(String.valueOf(entity.getProvincia().getId())).
+                    build();
         }
-        return comuneDto;
+        return null;
     }
 }

@@ -4,11 +4,14 @@ import it.sogei.svildep.indirizziservice.model.enums.FlagSN;
 import it.sogei.svildep.indirizziservice.model.enums.FlagSessoMF;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+@SuperBuilder
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter

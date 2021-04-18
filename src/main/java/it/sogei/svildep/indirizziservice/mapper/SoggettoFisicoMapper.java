@@ -18,27 +18,25 @@ public class SoggettoFisicoMapper implements Mapper<SoggettoFisico, SoggettoFisi
 
     @Override
     public SoggettoFisico mapDtoToEntityImpl(SoggettoFisicoDto dto) throws RuntimeException {
-        SoggettoFisico soggettoFisico = new SoggettoFisico();
 
-        soggettoFisico.setId(Long.parseLong(dto.getId()));
-        soggettoFisico.setNome(dto.getNome());
-        soggettoFisico.setCognome(dto.getCognome());
-        soggettoFisico.setDataNascita(LocalDate.parse(dto.getDataNascita()));
-        soggettoFisico.setSoggetto(soggettoMapper.mapDtoToEntityImpl(dto.getSoggetto()));
+        return SoggettoFisico.builder()
+                .id(Long.parseLong(dto.getId()))
+                .nome(dto.getNome())
+                .cognome(dto.getCognome())
+                .dataNascita(LocalDate.parse(dto.getDataNascita()))
+                .soggetto(soggettoMapper.mapDtoToEntityImpl(dto.getSoggetto()))
+                .build();
 
-        return soggettoFisico;
     }
 
     @Override
     public SoggettoFisicoDto mapEntityToDtoImpl(SoggettoFisico entity) {
-        SoggettoFisicoDto soggettoFisicoDto = new SoggettoFisicoDto();
 
-        soggettoFisicoDto.setId(String.valueOf(entity.getId()));
-        soggettoFisicoDto.setNome(entity.getNome());
-        soggettoFisicoDto.setCognome(entity.getCognome());
-        soggettoFisicoDto.setDataNascita(String.valueOf(entity.getDataNascita()));
-        soggettoFisicoDto.setSoggetto(soggettoMapper.mapEntityToDtoImpl(entity.getSoggetto()));
-
-        return soggettoFisicoDto;
+        return SoggettoFisicoDto.builder()
+                .id(String.valueOf(entity.getId()))
+                .nome(entity.getCognome())
+                .dataNascita(String.valueOf(entity.getDataNascita()))
+                .soggetto(soggettoMapper.mapEntityToDtoImpl(entity.getSoggetto()))
+                .build();
     }
 }

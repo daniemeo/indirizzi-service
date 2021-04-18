@@ -1,69 +1,65 @@
 package it.sogei.svildep.indirizziservice.mapper;
 
 import it.sogei.svildep.indirizziservice.dto.InsertIndirizzoDto;
-import it.sogei.svildep.indirizziservice.model.Indirizzo;
-import it.sogei.svildep.indirizziservice.model.SoggettoFisico;
-import it.sogei.svildep.indirizziservice.model.StatoEstero;
-import it.sogei.svildep.indirizziservice.model.TipoIndirizzo;
+import it.sogei.svildep.indirizziservice.model.*;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Primary
 @NoArgsConstructor
-public class InsertIndirizzoMapper implements Mapper<Indirizzo, InsertIndirizzoDto>{
+public class InsertIndirizzoMapper implements Mapper<Indirizzo, InsertIndirizzoDto> {
 
-    @Autowired ComunePerInsertMapper comunePerInsertMapper;
-    @Autowired StatoEsteroMapper statoEsteroMapper;
+    @Autowired
+    StatoEsteroMapper statoEsteroMapper;
 
     @Override
     public Indirizzo mapDtoToEntityImpl(InsertIndirizzoDto dto) throws RuntimeException {
-        Indirizzo indirizzo = new Indirizzo();
+       return Indirizzo.builder()
+                .civico(dto.getCivico())
+                .indirizzo(dto.getIndirizzo())
+                .cap(dto.getCap())
+                .dettaglio(dto.getDettaglio())
+                .ripartizione(dto.getRipartizione())
+                .tipoIndirizzo(TipoIndirizzo.builder().id(Long.parseLong(dto.getTipoIndirizzoId())).build())
+                .soggettoFisico(SoggettoFisico.builder().id(Long.parseLong(dto.getSoggettoFisicoId())).build())
+                .comune(
+                        Optional.ofNullable(dto.getComuneId())
+                                .map(id -> Comune.builder().id(Long.parseLong(id)).build())
+                                .orElse(null)
+                )
+                .statoEstero(
+                        Optional.ofNullable(dto.getStatoEsteroId())
+                        .map(id-> StatoEstero.builder().id(Long.parseLong(id)).build())
+                        .orElse(null)
+                )
+                .build();
 
-        indirizzo.setCivico(dto.getCivico());
-        indirizzo.setIndirizzo(dto.getIndirizzo());
-        indirizzo.setCap(dto.getCap());
-        indirizzo.setDettaglio(dto.getDettaglio());
-        indirizzo.setRipartizione(dto.getRipartizione());
-
-        TipoIndirizzo tipoIndirizzo = new TipoIndirizzo();
-        tipoIndirizzo.setId(Long.parseLong(dto.getTipoIndirizzoId()));
-        indirizzo.setTipoIndirizzo(tipoIndirizzo);
-
-        SoggettoFisico soggetto = new SoggettoFisico();
-        soggetto.setId(Long.parseLong(dto.getSoggettoFisicoId()));
-        indirizzo.setSoggettoFisico(soggetto);
-
-        if(dto.getComuneDto() != null) {
-            indirizzo.setComune(comunePerInsertMapper.mapDtoToEntity(dto.getComuneDto()));
-        }
-
-        if(dto.getStatoEsteroId() != null) {
-            StatoEstero statoEstero = new StatoEstero();
-            statoEstero.setId(Long.parseLong(dto.getStatoEsteroId()));
-            indirizzo.setStatoEstero(statoEstero);
-        }
-
-
-        return indirizzo;
     }
 
     @Override
     public InsertIndirizzoDto mapEntityToDtoImpl(Indirizzo entity) {
-       InsertIndirizzoDto insertIndirizzoDto = new InsertIndirizzoDto();
 
-       insertIndirizzoDto.setCivico(entity.getCivico());
-       insertIndirizzoDto.setIndirizzo(entity.getIndirizzo());
-       insertIndirizzoDto.setCap(entity.getCap());
-       insertIndirizzoDto.setDettaglio(entity.getDettaglio());
-       insertIndirizzoDto.setRipartizione(entity.getRipartizione());
+        return InsertIndirizzoDto.builder().civico(entity.getCivico())
+                .indirizzo(entity.getIndirizzo())
+                .cap(entity.getCap())
+                .dettaglio(entity.getDettaglio())
+                .ripartizione(entity.getRipartizione())
+                .comuneId(
+                        Optional.ofNullable(entity.getComune().getId())
+                        .map(String::valueOf)
+                        .orElse(null)
+                )
+                .statoEsteroId(
+                        Optional.ofNullable(entity.getStatoEstero().getId())
+                        .map(String::valueOf)
+                        .orElse(null)
+                )
+                .build();
 
-       insertIndirizzoDto.setComuneDto(comunePerInsertMapper.mapEntityToDto(entity.getComune()));
-
-       insertIndirizzoDto.setStatoEsteroId(String.valueOf(entity.getStatoEstero().getId()));
-
-       return insertIndirizzoDto;
     }
 }

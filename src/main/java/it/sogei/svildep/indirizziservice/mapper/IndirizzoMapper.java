@@ -12,55 +12,40 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class IndirizzoMapper implements Mapper<Indirizzo, IndirizzoDto> {
 
-@Autowired SoggettoFisicoMapper soggettoFisicoMapper;
-@Autowired ComuneMapper comuneMapper;
-@Autowired StatoEsteroMapper statoEsteroMapper;
+    @Autowired
+    SoggettoFisicoMapper soggettoFisicoMapper;
+    @Autowired
+    ComuneMapper comuneMapper;
+    @Autowired
+    StatoEsteroMapper statoEsteroMapper;
 
     @Override
     public Indirizzo mapDtoToEntityImpl(IndirizzoDto dto) throws RuntimeException {
 
 
-        Indirizzo indirizzo = new Indirizzo();
-
-        indirizzo.setId(Long.parseLong(dto.getId()));
-        indirizzo.setCivico(dto.getCivico());
-        indirizzo.setIndirizzo(dto.getIndirizzo());
-        indirizzo.setCap(dto.getCap());
-        indirizzo.setDettaglio(dto.getDettaglio());
-        indirizzo.setRipartizione(dto.getRipartizione());
-
-        TipoIndirizzo tipoIndirizzo = new TipoIndirizzo();
-        tipoIndirizzo.setId(Long.parseLong(dto.getTipoIndirizzoId()));
-        indirizzo.setTipoIndirizzo(tipoIndirizzo);
-
-        indirizzo.setSoggettoFisico(soggettoFisicoMapper.mapDtoToEntityImpl(dto.getSoggettoFisicoDto()));
-
-        indirizzo.setComune(comuneMapper.mapDtoToEntityImpl(dto.getComuneDto()));
-
-        indirizzo.setStatoEstero(statoEsteroMapper.mapDtoToEntity(dto.getStatoEstero()));
-
-        return indirizzo;
+        return Indirizzo.builder()
+                .id(Long.parseLong(dto.getId()))
+                .civico(dto.getCivico())
+                .indirizzo(dto.getIndirizzo())
+                .cap(dto.getCap())
+                .dettaglio(dto.getDettaglio())
+                .ripartizione(dto.getRipartizione())
+                .tipoIndirizzo(TipoIndirizzo.builder().id(Long.parseLong(dto.getTipoIndirizzoId())).build())
+                .soggettoFisico(soggettoFisicoMapper.mapDtoToEntityImpl(dto.getSoggettoFisicoDto()))
+                .comune(comuneMapper.mapDtoToEntityImpl(dto.getComuneDto()))
+                .statoEstero(statoEsteroMapper.mapDtoToEntity(dto.getStatoEstero())).build();
     }
 
     @Override
     public IndirizzoDto mapEntityToDtoImpl(Indirizzo entity) {
 
-        IndirizzoDto indirizzoDto = new IndirizzoDto();
+        return IndirizzoDto.builder().id(String.valueOf(entity.getId())).civico(entity.getCivico())
+                .indirizzo(entity.getIndirizzo()).cap(entity.getCap()).dettaglio(entity.getDettaglio())
+                .ripartizione(entity.getRipartizione()).tipoIndirizzoId(String.valueOf(entity.getTipoIndirizzo().getId()))
+                .soggettoFisicoDto(soggettoFisicoMapper.mapEntityToDto(entity.getSoggettoFisico()))
+                .comuneDto(comuneMapper.mapEntityToDtoImpl(entity.getComune()))
+                .statoEstero(statoEsteroMapper.mapEntityToDtoImpl(entity.getStatoEstero()))
+                .build();
 
-        indirizzoDto.setId(String.valueOf(entity.getId()));
-        indirizzoDto.setCivico(entity.getCivico());
-        indirizzoDto.setIndirizzo(entity.getIndirizzo());
-        indirizzoDto.setCap(entity.getCap());
-        indirizzoDto.setDettaglio(entity.getDettaglio());
-        indirizzoDto.setRipartizione(entity.getRipartizione());
-        indirizzoDto.setTipoIndirizzoId(String.valueOf(entity.getTipoIndirizzo().getId()));
-
-        indirizzoDto.setSoggettoFisicoDto(soggettoFisicoMapper.mapEntityToDto(entity.getSoggettoFisico()));
-
-        indirizzoDto.setComuneDto(comuneMapper.mapEntityToDtoImpl(entity.getComune()));
-
-        indirizzoDto.setStatoEstero(statoEsteroMapper.mapEntityToDtoImpl(entity.getStatoEstero()));
-
-        return indirizzoDto;
     }
 }

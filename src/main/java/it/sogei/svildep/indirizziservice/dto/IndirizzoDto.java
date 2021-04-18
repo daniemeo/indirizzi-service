@@ -4,11 +4,12 @@ import it.sogei.svildep.indirizziservice.model.Soggetto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor

@@ -3,10 +3,13 @@ package it.sogei.svildep.indirizziservice.model;
 import it.sogei.svildep.indirizziservice.model.enums.FlagTipoSoggetto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-
+@SuperBuilder
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter

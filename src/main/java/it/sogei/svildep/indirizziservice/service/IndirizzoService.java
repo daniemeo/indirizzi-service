@@ -45,9 +45,9 @@ public class IndirizzoService {
 
 
     public MessageDto insertIndirizzo(InsertIndirizzoDto insertIndirizzoDto) throws SvildepException {
-        if(insertIndirizzoDto.getComuneDto() ==  null && insertIndirizzoDto.getStatoEsteroId() == null){
-             return new MessageDto(Messages.erroreInserimento, HttpStatus.BAD_REQUEST);
-        }
+//        if(insertIndirizzoDto.getComuneId() ==  null && insertIndirizzoDto.getStatoEsteroId() == null){
+//             return new MessageDto(Messages.erroreInserimento, HttpStatus.BAD_REQUEST);
+//        }
         Indirizzo indirizzo =  insertIndirizzoMapper.mapDtoToEntity(insertIndirizzoDto);
         indirizzoRepository.save(indirizzo);
         anagrafeUnica.insertIndirizzo(insertIndirizzoDto);
@@ -78,7 +78,7 @@ public class IndirizzoService {
     }
 
 
-    public MessageDto chiusura(AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto) throws SvildepException{
+    public MessageDto chiusuraAssociazione(AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto) throws SvildepException{
         Indirizzo indirizzo = indirizzoRepository.findById(Long.parseLong(associaDissociaIndirizzoDto.getIndirizzoId())).orElse(null);
         if(indirizzo == null ){
             throw new SvildepException(Messages.indirizzoInesistente, HttpStatus.BAD_REQUEST);

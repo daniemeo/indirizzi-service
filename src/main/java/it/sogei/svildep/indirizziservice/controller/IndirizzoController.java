@@ -37,7 +37,9 @@ public class IndirizzoController {
     @PostMapping("nuovoIndirizzo")
     public ResponseEntity<MessageDto>nuovoIndirizzo(@Valid @RequestBody InsertIndirizzoDto insertIndirizzoDto,
                                             BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
+        Object ciao= bindingResult.getAllErrors();
+        if (bindingResult.hasErrors()) throw new SvildepException(bindingResult.getAllErrors().stream()
+                .map(error->error.getDefaultMessage()).reduce("",(str1,str2)->str1+str2));
         return ResponseEntity.ok().body(indirizzoService.insertIndirizzo(insertIndirizzoDto));
     }
 
@@ -48,11 +50,11 @@ public class IndirizzoController {
         return ResponseEntity.ok().body(indirizzoService.associaASoggetto(associaDissociaIndirizzoDto));
 
     }
-    @PutMapping("chiusura")
+    @PutMapping("chiusuraAssociazione")
     public ResponseEntity<MessageDto>chiusura(@Valid @RequestBody AssociaDissociaIndirizzoDto associaDissociaIndirizzoDto,
                                                       BindingResult bindingResult) throws Exception{
         if (bindingResult.hasErrors()) throw new SvildepException(bindingResult);
-        return ResponseEntity.ok().body(indirizzoService.chiusura(associaDissociaIndirizzoDto));
+        return ResponseEntity.ok().body(indirizzoService.chiusuraAssociazione(associaDissociaIndirizzoDto));
 
     }
 
