@@ -45,9 +45,7 @@ public class IndirizzoService {
 
 
     public MessageDto insertIndirizzo(InsertIndirizzoDto insertIndirizzoDto) throws SvildepException {
-//        if(insertIndirizzoDto.getComuneId() ==  null && insertIndirizzoDto.getStatoEsteroId() == null){
-//             return new MessageDto(Messages.erroreInserimento, HttpStatus.BAD_REQUEST);
-//        }
+
         Indirizzo indirizzo =  insertIndirizzoMapper.mapDtoToEntity(insertIndirizzoDto);
         indirizzoRepository.save(indirizzo);
         anagrafeUnica.insertIndirizzo(insertIndirizzoDto);

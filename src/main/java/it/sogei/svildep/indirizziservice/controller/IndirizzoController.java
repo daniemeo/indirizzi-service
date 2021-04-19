@@ -37,7 +37,8 @@ public class IndirizzoController {
     @PostMapping("nuovoIndirizzo")
     public ResponseEntity<MessageDto>nuovoIndirizzo(@Valid @RequestBody InsertIndirizzoDto insertIndirizzoDto,
                                             BindingResult bindingResult) throws Exception {
-        Object ciao= bindingResult.getAllErrors();
+
+        // aggiustare il modo di stampare l'errore( staccare e renderlo migliore!!)
         if (bindingResult.hasErrors()) throw new SvildepException(bindingResult.getAllErrors().stream()
                 .map(error->error.getDefaultMessage()).reduce("",(str1,str2)->str1+str2));
         return ResponseEntity.ok().body(indirizzoService.insertIndirizzo(insertIndirizzoDto));

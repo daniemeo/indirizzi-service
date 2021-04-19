@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
         @XORFields(
                 field = "comuneId",
                 fieldMatch = "statoEsteroId",
-                message = "fuffa"
+                message = "bisogna inserire un comune o uno stato estero"
         )
 })
 public class InsertIndirizzoDto extends SvildepDto{

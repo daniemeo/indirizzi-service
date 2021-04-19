@@ -1,9 +1,7 @@
 package it.sogei.svildep.indirizziservice.mapper;
 
 import it.sogei.svildep.indirizziservice.dto.SoggettoDto;
-import it.sogei.svildep.indirizziservice.dto.SoggettoFisicoDto;
 import it.sogei.svildep.indirizziservice.model.Soggetto;
-import it.sogei.svildep.indirizziservice.model.SoggettoFisico;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
